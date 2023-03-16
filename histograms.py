@@ -1,16 +1,15 @@
 import csv
 
-global data, incomeList, bins
+global incomeList, bins
 
 # List of Income attribute
 incomeList = list()
-
+# Bins as dictionary
 bins = dict()
 
 
 # Read csv file Income data, add them into a list
-def read_data():
-    global data
+def read_income_data():
     with open('acs2015_census_tract_data.csv', newline='') as csvfile:
         data = list(csv.reader(csvfile))
         for income in range(1, len(data)):
@@ -19,14 +18,6 @@ def read_data():
                 continue
             else:
                 incomeList.append(float(data[income][13]))
-
-
-read_data()
-incomeList = sorted(incomeList)
-# Minimum income
-min_income = min(incomeList)
-# Maximum income
-max_income = max(incomeList)
 
 
 # Create an equi-width histogram
@@ -56,10 +47,18 @@ def equiwidth():
 # def equidepth():
 
 
+read_income_data()
+incomeList = sorted(incomeList)
+# Minimum income
+min_income = min(incomeList)
+# Maximum income
+max_income = max(incomeList)
+
+equiwidth()
+
 print(len(incomeList), ' valid income values')
 print("minimum income = ", min_income)
 print("maximum income = ", max_income)
 print("equiwidth:")
-equiwidth()
 for key in bins:
     print("range: ", key, ", numtuples: ", len(bins[key]))
