@@ -23,22 +23,22 @@ def read_income_data():
 # Create an equi-width histogram
 def equiwidth():
     global incomeList, bins
-    start = 0
+    pointer = 0
     min = min_income
     # The width for exact distribution of the values into the bins
     width = (max_income - min_income) / 100
     for i in range(100):
         # Range of every bin
-        temp = [round(min, 2), round(min + width, 2)]
-        b = str(temp).replace(']', ')')
+        b = [round(min, 2), round(min + width, 2)]
+        b = str(b).replace(']', ')')
         # Initialize the dictionary
         bins[b] = []
-        # Add income values into the bins
-        for income in range(start, len(incomeList)):
+        # Split income values into the right bins
+        for income in range(pointer, len(incomeList)):
             if min <= incomeList[income] < min + width:
                 bins[b].append(incomeList[income])
             else:
-                start = income
+                pointer = income
                 break
         # Update the value of min
         min = round(min + width, 2)
