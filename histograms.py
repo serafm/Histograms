@@ -1,11 +1,13 @@
 import csv
 
-global incomeList, bins
+global incomeList, equiwidthBins, equidepthBins
 
 # List of Income attribute
 incomeList = list()
+incomeListSize = len(incomeList)
 # Bins as dictionary
-bins = dict()
+equiwidthBins = dict()
+equidepthBins = dict()
 
 
 # Read csv file Income data, add them into a list
@@ -22,7 +24,7 @@ def read_income_data():
 
 # Create an equi-width histogram
 def equiwidth():
-    global incomeList, bins
+    global incomeList, equiwidthBins
     pointer = 0
     min = min_income
     # The width for exact distribution of the values into the bins
@@ -32,11 +34,11 @@ def equiwidth():
         b = [round(min, 2), round(min + width, 2)]
         b = str(b).replace(']', ')')
         # Initialize the dictionary
-        bins[b] = []
+        equiwidthBins[b] = []
         # Split income values into the right bins
         for income in range(pointer, len(incomeList)):
             if min <= incomeList[income] < min + width:
-                bins[b].append(incomeList[income])
+                equiwidthBins[b].append(incomeList[income])
             else:
                 pointer = income
                 break
@@ -44,8 +46,16 @@ def equiwidth():
         min = round(min + width, 2)
 
 
-# def equidepth():
-
+def equidepth():
+    start = 0
+    pointer = int((len(incomeList)/100))
+    stop = pointer
+    for i in range(100):
+        b = [incomeList[start], incomeList[stop]]
+        b = str(b).replace(']', ')')
+        equidepthBins[b] = incomeList[start:stop]
+        start = stop
+        stop += pointer
 
 read_income_data()
 incomeList = sorted(incomeList)
@@ -59,6 +69,12 @@ equiwidth()
 print(len(incomeList), ' valid income values')
 print("minimum income = ", min_income)
 print("maximum income = ", max_income)
+
 print("equiwidth:")
-for key in bins:
-    print("range: ", key, ", numtuples: ", len(bins[key]))
+for key in equiwidthBins:
+    print("range: ", key, ", numtuples: ", len(equiwidthBins[key]))
+
+equidepth()
+print("equidepth: ")
+for key in equidepthBins:
+    print("range: ", key, ", numtuples: ", len(equidepthBins[key]))
