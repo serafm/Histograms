@@ -7,7 +7,7 @@ class Histogram:
     global incomeList, equiwidthBins, equidepthBins, min_income, max_income
     # List of Income attribute
     incomeList = list()
-    # Bins as dictionary
+    # Bins as dictionaries
     equiwidthBins = dict()
     equidepthBins = dict()
 
@@ -27,6 +27,7 @@ class Histogram:
                     continue
                 else:
                     incomeList.append(float(data[income][self.attribute]))
+        # Sort income list
         incomeList = sorted(incomeList)
         # Minimum income
         min_income = min(incomeList)
@@ -36,20 +37,22 @@ class Histogram:
     # Create an equi-width histogram
     def equiwidth(self):
         global incomeList, equiwidthBins, min_income, max_income
+        # Keep a pointer to continue from where the list stops to add in a bin the values
+        # (so there no need to start over from the beginning of the list)
         pointer = 0
         min = min_income
         # The width for exact distribution of the values into the bins
         width = (max_income - min_income) / 100
         for i in range(100):
             # Range of every bin
-            b = [round(min, 2), round(min + width, 2)]
-            b = str(b).replace(']', ')')
+            bin_range = [round(min, 2), round(min + width, 2)]
+            bin_range = str(bin_range).replace(']', ')')
             # Initialize the dictionary
-            equiwidthBins[b] = []
-            # Split income values into the right bins
+            equiwidthBins[bin_range] = []
+            # Add income values into the right bins
             for income in range(pointer, len(incomeList)):
                 if min <= incomeList[income] < min + width:
-                    equiwidthBins[b].append(incomeList[income])
+                    equiwidthBins[bin_range].append(incomeList[income])
                 else:
                     pointer = income
                     break
@@ -62,9 +65,9 @@ class Histogram:
         pointer = int((len(incomeList) / 100))
         stop = pointer
         for i in range(100):
-            b = [incomeList[start], incomeList[stop]]
-            b = str(b).replace(']', ')')
-            equidepthBins[b] = incomeList[start:stop]
+            bin_range = [incomeList[start], incomeList[stop]]
+            bin_range = str(bin_range).replace(']', ')')
+            equidepthBins[bin_range] = incomeList[start:stop]
             start = stop
             stop += pointer
 
@@ -81,9 +84,9 @@ class Histogram:
             print("range: ", key, ", numtuples: ", len(equidepthBins[key]))
 
 
-path = input("Please enter csv file path: ")
-attribute = input("Please enter attribute: ")
-histogram = Histogram(path, attribute)
+csv_path = input("Please enter csv file path: ")
+csv_attribute = input("Please enter attribute: ")
+histogram = Histogram(csv_path, csv_attribute)
 histogram.read_income_data()
 histogram.equiwidth()
 histogram.equidepth()
