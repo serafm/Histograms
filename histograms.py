@@ -76,14 +76,19 @@ class Histogram:
         print(len(incomeList), ' valid income values')
         print("minimum income = ", min_income)
         print("maximum income = ", max_income)
+
+        # Equi-width data
         print("equiwidth:")
         for key in equiwidthBins:
             print("range: ", key, ", numtuples: ", len(equiwidthBins[key]))
+
+        # Equi-depth data
         print("equidepth: ")
         for key in equidepthBins:
             print("range: ", key, ", numtuples: ", len(equidepthBins[key]))
 
 
+# Main
 csv_path = input("Please enter csv file path: ")
 csv_attribute = input("Please enter attribute: ")
 histogram = Histogram(csv_path, csv_attribute)
