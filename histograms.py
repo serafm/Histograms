@@ -45,8 +45,8 @@ class Histogram:
         width = (max_income - min_income) / 100
         for i in range(100):
             # Range of every bin
-            bin_range = [round(min, 2), round(min + width, 2)]
-            bin_range = str(bin_range).replace(']', ')')
+            bin_range = (round(min, 2), round(min + width, 2))
+            #bin_range = str(bin_range).replace(']', ')')
             # Initialize the dictionary
             equiwidthBins[bin_range] = []
             # Add income values into the right bins
@@ -65,11 +65,64 @@ class Histogram:
         pointer = int((len(incomeList) / 100))
         stop = pointer
         for i in range(100):
-            bin_range = [incomeList[start], incomeList[stop]]
-            bin_range = str(bin_range).replace(']', ')')
+            bin_range = (incomeList[start], incomeList[stop])
+            #bin_range = str(bin_range).replace(']', ')')
             equidepthBins[bin_range] = incomeList[start:stop]
             start = stop
             stop += pointer
+
+    def actual_result(self, a, b):
+        count = 0
+        for income in incomeList:
+            if float(a) <= income < float(b):
+                count += 1
+        print("Actual result: ", count)
+
+    def equiwidth_estimated_result(self, a, b):
+        global equiwidthBins
+        count = 0
+        range_1 = 0
+        range_2 = 0
+        for bin in equiwidthBins:
+            if bin[0] < float(a) < bin[1]:
+                numtuples = len(equiwidthBins[bin])
+                diff = float(bin[1]) - float(bin[0])
+                r = float(bin[1]) - float(a)
+                bin_percentage = float(r/diff)
+                range_1 = float(numtuples * bin_percentage)
+            if bin[0] < float(b) < bin[1]:
+                numtuples = len(equiwidthBins[bin])
+                diff = float(bin[1]) - float(bin[0])
+                r = float(b) - float(bin[0])
+                bin_percentage = float(r / diff)
+                range_2 = float(numtuples * bin_percentage)
+            elif bin[0] > float(a) and bin[1] < float(b):
+                count += len(equiwidthBins[bin])
+        estimated_results = count+range_1+range_2
+        print('equiwidth estimated results: ', estimated_results)
+
+    def equidepth_estimated_result(self, a, b):
+        global equidepthBins
+        count = 0
+        range_1 = 0
+        range_2 = 0
+        for bin in equidepthBins:
+            if bin[0] < float(a) < bin[1]:
+                numtuples = len(equidepthBins[bin])
+                diff = float(bin[1]) - float(bin[0])
+                r = float(bin[1]) - float(a)
+                bin_percentage = float(r/diff)
+                range_1 = float(numtuples * bin_percentage)
+            if bin[0] < float(b) < bin[1]:
+                numtuples = len(equidepthBins[bin])
+                diff = float(bin[1]) - float(bin[0])
+                r = float(b) - float(bin[0])
+                bin_percentage = float(r / diff)
+                range_2 = float(numtuples * bin_percentage)
+            elif bin[0] > float(a) and bin[1] < float(b):
+                count += len(equidepthBins[bin])
+        estimated_results = count+range_1+range_2
+        print('equidepth estimated results: ', estimated_results)
 
     def print(self):
         global min_income, max_income, incomeList, equiwidthBins, equidepthBins
@@ -89,10 +142,14 @@ class Histogram:
 
 
 # Main
-csv_path = input("Please enter csv file path: ")
-csv_attribute = input("Please enter attribute: ")
+csv_path = 'acs2015_census_tract_data.csv' #input("Please enter csv file path: ")
+csv_attribute = 'Income' #input("Please enter attribute: ")
+a, b = input("Please enter a range query [a,b). Each value seperated by space (ex. 1000 5500): ").split()
 histogram = Histogram(csv_path, csv_attribute)
 histogram.read_income_data()
 histogram.equiwidth()
 histogram.equidepth()
 histogram.print()
+histogram.actual_result(a, b)
+histogram.equiwidth_estimated_result(a, b)
+histogram.equidepth_estimated_result(a, b)
