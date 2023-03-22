@@ -72,84 +72,93 @@ class Histogram:
             stop += pointer
 
     def actual_result(self, a, b):
-        count = 0
+        global incomeList
+        result = 0
         for income in incomeList:
             if float(a) <= income < float(b):
-                count += 1
-        print("Actual result: ", count)
+                result += 1
+        #print("Actual result: ", result)
+        return result
 
     def equiwidth_estimated_result(self, a, b):
         global equiwidthBins
-        count = 0
-        range_1 = 0
-        range_2 = 0
+        estimated_result = 0
+        a = float(a)
+        b = float(b)
         for bin in equiwidthBins:
-            if bin[0] < float(a) < bin[1]:
-                numtuples = len(equiwidthBins[bin])
-                diff = float(bin[1]) - float(bin[0])
-                r = float(bin[1]) - float(a)
-                bin_percentage = float(r/diff)
-                range_1 = float(numtuples * bin_percentage)
-            if bin[0] < float(b) < bin[1]:
-                numtuples = len(equiwidthBins[bin])
-                diff = float(bin[1]) - float(bin[0])
-                r = float(b) - float(bin[0])
-                bin_percentage = float(r / diff)
-                range_2 = float(numtuples * bin_percentage)
+            range_difference = bin[1] - bin[0]
+            numtuples = len(equiwidthBins[bin])
+            if bin[0] <= a < bin[1] and bin[0] < b <= bin[1]:
+                ab_difference = b - a
+                percentage = ab_difference/range_difference
+                estimated_result += (percentage*numtuples)
+                """print(bin)
+                print("a b difference: ", ab_difference)
+                print("percentage: ", percentage)
+                print("result: ", percentage*numtuples)"""
+            elif bin[0] <= a < bin[1]:
+                a_bin_difference = bin[1] - a
+                percentage = a_bin_difference/range_difference
+                estimated_result += (percentage*numtuples)
+                """print(bin)
+                print("a bin difference: ", a_bin_difference)
+                print("percentage: ", percentage)
+                print("result: ", percentage * numtuples)"""
+            elif bin[0] <= b < bin[1]:
+                b_bin_difference = b - bin[0]
+                percentage = b_bin_difference/range_difference
+                estimated_result += (percentage*numtuples)
+                """print(bin)
+                print("b bin difference: ", b_bin_difference)
+                print("percentage: ", percentage)
+                print("result: ", percentage*numtuples)"""
             elif bin[0] > float(a) and bin[1] < float(b):
-                count += len(equiwidthBins[bin])
-        estimated_results = count+range_1+range_2
-        print('equiwidth estimated results: ', estimated_results)
+                estimated_result += numtuples
+                """print(bin)
+                print("result: ", numtuples)"""
+        #print('equiwidth estimated results: ', estimated_result)
+        return estimated_result
 
     def equidepth_estimated_result(self, a, b):
         global equidepthBins
-        count = 0
-        range_1 = 0
-        range_2 = 0
+        estimated_result = 0
+        a = float(a)
+        b = float(b)
         for bin in equidepthBins:
-            if bin[0] < float(a) < bin[1]:
-                numtuples = len(equidepthBins[bin])
-                diff = float(bin[1]) - float(bin[0])
-                r = float(bin[1]) - float(a)
-                bin_percentage = float(r/diff)
-                range_1 = float(numtuples * bin_percentage)
-            if bin[0] < float(b) < bin[1]:
-                numtuples = len(equidepthBins[bin])
-                diff = float(bin[1]) - float(bin[0])
-                r = float(b) - float(bin[0])
-                bin_percentage = float(r / diff)
-                range_2 = float(numtuples * bin_percentage)
+            range_difference = bin[1] - bin[0]
+            numtuples = len(equidepthBins[bin])
+            if bin[0] <= a < bin[1] and bin[0] < b <= bin[1]:
+                ab_difference = b - a
+                percentage = ab_difference/range_difference
+                estimated_result += (percentage*numtuples)
+            elif bin[0] <= a < bin[1]:
+                a_bin_difference = bin[1] - a
+                percentage = a_bin_difference/range_difference
+                estimated_result += (percentage*numtuples)
+            elif bin[0] <= b < bin[1]:
+                b_bin_difference = b - bin[0]
+                percentage = b_bin_difference/range_difference
+                estimated_result += (percentage*numtuples)
             elif bin[0] > float(a) and bin[1] < float(b):
-                count += len(equidepthBins[bin])
-        estimated_results = count+range_1+range_2
-        print('equidepth estimated results: ', estimated_results)
+                estimated_result += numtuples
+        #print('equidepth estimated results: ', estimated_result)
+        return estimated_result
 
     def print(self):
         global min_income, max_income, incomeList, equiwidthBins, equidepthBins
+        print()
         print(len(incomeList), ' valid income values')
         print("minimum income = ", min_income)
         print("maximum income = ", max_income)
 
+        """
         # Equi-width data
-        print("equiwidth:")
+        print("\nequiwidth:")
         for key in equiwidthBins:
             print("range: ", key, ", numtuples: ", len(equiwidthBins[key]))
 
         # Equi-depth data
-        print("equidepth: ")
+        print("\nequidepth: ")
         for key in equidepthBins:
             print("range: ", key, ", numtuples: ", len(equidepthBins[key]))
-
-
-# Main
-csv_path = 'acs2015_census_tract_data.csv' #input("Please enter csv file path: ")
-csv_attribute = 'Income' #input("Please enter attribute: ")
-a, b = input("Please enter a range query [a,b). Each value seperated by space (ex. 1000 5500): ").split()
-histogram = Histogram(csv_path, csv_attribute)
-histogram.read_income_data()
-histogram.equiwidth()
-histogram.equidepth()
-histogram.print()
-histogram.actual_result(a, b)
-histogram.equiwidth_estimated_result(a, b)
-histogram.equidepth_estimated_result(a, b)
+        """
