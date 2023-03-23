@@ -46,7 +46,6 @@ class Histogram:
         for i in range(100):
             # Range of every bin
             bin_range = (round(min, 2), round(min + width, 2))
-            #bin_range = str(bin_range).replace(']', ')')
             # Initialize the dictionary
             equiwidthBins[bin_range] = []
             # Add income values into the right bins
@@ -59,6 +58,7 @@ class Histogram:
             # Update the value of min
             min = round(min + width, 2)
 
+    # Create an equi-depth histogram
     def equidepth(self):
         global incomeList, equidepthBins
         start = 0
@@ -66,20 +66,20 @@ class Histogram:
         stop = pointer
         for i in range(100):
             bin_range = (incomeList[start], incomeList[stop])
-            #bin_range = str(bin_range).replace(']', ')')
             equidepthBins[bin_range] = incomeList[start:stop]
             start = stop
             stop += pointer
 
+    # Calculate the actula result of a query
     def actual_result(self, a, b):
         global incomeList
         result = 0
         for income in incomeList:
             if float(a) <= income < float(b):
                 result += 1
-        #print("Actual result: ", result)
         return result
 
+    # Calculate the estimated result using equiwidth of a query
     def equiwidth_estimated_result(self, a, b):
         global equiwidthBins
         estimated_result = 0
@@ -92,33 +92,19 @@ class Histogram:
                 ab_difference = b - a
                 percentage = ab_difference/range_difference
                 estimated_result += (percentage*numtuples)
-                """print(bin)
-                print("a b difference: ", ab_difference)
-                print("percentage: ", percentage)
-                print("result: ", percentage*numtuples)"""
             elif bin[0] <= a < bin[1]:
                 a_bin_difference = bin[1] - a
                 percentage = a_bin_difference/range_difference
                 estimated_result += (percentage*numtuples)
-                """print(bin)
-                print("a bin difference: ", a_bin_difference)
-                print("percentage: ", percentage)
-                print("result: ", percentage * numtuples)"""
             elif bin[0] <= b < bin[1]:
                 b_bin_difference = b - bin[0]
                 percentage = b_bin_difference/range_difference
                 estimated_result += (percentage*numtuples)
-                """print(bin)
-                print("b bin difference: ", b_bin_difference)
-                print("percentage: ", percentage)
-                print("result: ", percentage*numtuples)"""
             elif bin[0] > float(a) and bin[1] < float(b):
                 estimated_result += numtuples
-                """print(bin)
-                print("result: ", numtuples)"""
-        #print('equiwidth estimated results: ', estimated_result)
         return estimated_result
 
+    # Calculate the estimated result using equidepth of a query
     def equidepth_estimated_result(self, a, b):
         global equidepthBins
         estimated_result = 0
@@ -141,9 +127,9 @@ class Histogram:
                 estimated_result += (percentage*numtuples)
             elif bin[0] > float(a) and bin[1] < float(b):
                 estimated_result += numtuples
-        #print('equidepth estimated results: ', estimated_result)
         return estimated_result
 
+    # Print stats
     def print(self):
         global min_income, max_income, incomeList, equiwidthBins, equidepthBins
         print()
@@ -151,14 +137,16 @@ class Histogram:
         print("minimum income = ", min_income)
         print("maximum income = ", max_income)
 
-        """
+    def print_equiwidth(self):
         # Equi-width data
         print("\nequiwidth:")
         for key in equiwidthBins:
-            print("range: ", key, ", numtuples: ", len(equiwidthBins[key]))
+            range = str(key).replace('(', '[')
+            print("range: ", range, ", numtuples: ", len(equiwidthBins[key]))
 
+    def print_equidepth(self):
         # Equi-depth data
         print("\nequidepth: ")
         for key in equidepthBins:
-            print("range: ", key, ", numtuples: ", len(equidepthBins[key]))
-        """
+            range = str(key).replace('(', '[')
+            print("range: ", range, ", numtuples: ", len(equidepthBins[key]))

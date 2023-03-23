@@ -21,10 +21,6 @@ def experiments(csv_path, csv_attribute, n, r):
         b = random.randint(r[0], r[1])
         while a > b:
             a = random.randint(r[0], r[1])
-        #print("Experiment ", i)
-        #print("a= ", a)
-        #print("b= ", b)
-        #print("\n")
 
         act_result = histogram.actual_result(a, b)
         est_equiwidth = histogram.equiwidth_estimated_result(a, b)
@@ -42,15 +38,10 @@ def experiments(csv_path, csv_attribute, n, r):
         accuracy_equiwidth_list.append(accuracy_equiwidth)
         accuracy_equidepth_list.append(accuracy_equidepth)
 
-    class bcolors:
-        green = '\033[92m'
-        end = '\033[0m'
-        bold = '\033[1m'
-
     # Metrics
     mo_equiwidth = sum(accuracy_equiwidth_list) / len(accuracy_equiwidth_list)
     mo_equidepth = sum(accuracy_equidepth_list) / len(accuracy_equidepth_list)
-    print(bcolors.green + bcolors.bold + "\nAccuracy of histograms" + bcolors.end)
+    print("\nAccuracy of histograms")
     print("equiwidth accuracy = ", round(mo_equiwidth, 2), "%")
     print("equidepth accuracy = ", round(mo_equidepth, 2), "%")
 
@@ -68,6 +59,8 @@ def main():
         histogram.equiwidth()
         histogram.equidepth()
         histogram.print()
+        histogram.print_equiwidth()
+        histogram.print_equidepth()
         result = histogram.actual_result(a, b)
         equiwidth_result = histogram.equiwidth_estimated_result(a, b)
         equidepth_result = histogram.equidepth_estimated_result(a, b)
