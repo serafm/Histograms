@@ -1,3 +1,5 @@
+# Serafeim Themistokleous 4555
+
 import csv
 
 global incomeList, equiwidthBins, equidepthBins, min_income, max_income
@@ -34,6 +36,8 @@ class Histogram:
         # Maximum income
         max_income = max(incomeList)
 
+        return [min_income, max_income]
+
     # Create an equi-width histogram
     def equiwidth(self):
         global incomeList, equiwidthBins, min_income, max_income
@@ -53,6 +57,7 @@ class Histogram:
                 if min <= incomeList[income] < min + width:
                     equiwidthBins[bin_range].append(incomeList[income])
                 else:
+                    # update pointer value
                     pointer = income
                     break
             # Update the value of min
@@ -70,7 +75,7 @@ class Histogram:
             start = stop
             stop += pointer
 
-    # Calculate the actula result of a query
+    # Calculate the actual result of a query
     def actual_result(self, a, b):
         global incomeList
         result = 0
@@ -89,16 +94,13 @@ class Histogram:
             range_difference = bin[1] - bin[0]
             numtuples = len(equiwidthBins[bin])
             if bin[0] <= a < bin[1] and bin[0] < b <= bin[1]:
-                ab_difference = b - a
-                percentage = ab_difference/range_difference
+                percentage = (b-a)/range_difference
                 estimated_result += (percentage*numtuples)
             elif bin[0] <= a < bin[1]:
-                a_bin_difference = bin[1] - a
-                percentage = a_bin_difference/range_difference
+                percentage = (bin[1]-a)/range_difference
                 estimated_result += (percentage*numtuples)
             elif bin[0] <= b < bin[1]:
-                b_bin_difference = b - bin[0]
-                percentage = b_bin_difference/range_difference
+                percentage = (b-bin[0])/range_difference
                 estimated_result += (percentage*numtuples)
             elif bin[0] > float(a) and bin[1] < float(b):
                 estimated_result += numtuples
@@ -114,37 +116,33 @@ class Histogram:
             range_difference = bin[1] - bin[0]
             numtuples = len(equidepthBins[bin])
             if bin[0] <= a < bin[1] and bin[0] < b <= bin[1]:
-                ab_difference = b - a
-                percentage = ab_difference/range_difference
+                percentage = (b-a)/range_difference
                 estimated_result += (percentage*numtuples)
             elif bin[0] <= a < bin[1]:
-                a_bin_difference = bin[1] - a
-                percentage = a_bin_difference/range_difference
+                percentage = (bin[1]-a)/range_difference
                 estimated_result += (percentage*numtuples)
             elif bin[0] <= b < bin[1]:
-                b_bin_difference = b - bin[0]
-                percentage = b_bin_difference/range_difference
+                percentage = (b-bin[0])/range_difference
                 estimated_result += (percentage*numtuples)
             elif bin[0] > float(a) and bin[1] < float(b):
                 estimated_result += numtuples
         return estimated_result
 
     # Print stats
-    def print(self):
+    def print_result(self):
         global min_income, max_income, incomeList, equiwidthBins, equidepthBins
-        print()
         print(len(incomeList), ' valid income values')
         print("minimum income = ", min_income)
         print("maximum income = ", max_income)
 
-    def print_equiwidth(self):
+    def print_equiwidth_result(self):
         # Equi-width data
         print("\nequiwidth:")
         for key in equiwidthBins:
             range = str(key).replace('(', '[')
             print("range: ", range, ", numtuples: ", len(equiwidthBins[key]))
 
-    def print_equidepth(self):
+    def print_equidepth_result(self):
         # Equi-depth data
         print("\nequidepth: ")
         for key in equidepthBins:
